@@ -1,0 +1,18 @@
+{% extends 'base.html' %}
+{% block content %}
+<h2>Results</h2>
+<table class="table">
+    <tr><th>Test</th><th>Student</th><th>Score</th><th>Submitted</th></tr>
+    {% for attempt in attempts %}
+        <tr>
+            <td>{{ attempt.test.title }}</td>
+            <td>{{ attempt.student.username }}</td>
+            <td>{{ '%.1f'|format(attempt.score) }}%</td>
+            <td>{{ attempt.created_at.strftime('%Y-%m-%d %H:%M') }}</td>
+            <td><a href="{{ url_for('results.view_attempt', attempt_id=attempt.id) }}">Details</a></td>
+        </tr>
+    {% else %}
+        <tr><td colspan="4">No attempts yet.</td></tr>
+    {% endfor %}
+</table>
+{% endblock %}
