@@ -1,0 +1,39 @@
+{% extends 'base.html' %}
+{% block content %}
+<h2>{{ test.title }}</h2>
+<p>{{ test.description }}</p>
+{% if test.time_limit %}
+<div id="timer" class="timer" data-minutes="{{ test.time_limit }}">Time remaining: {{ test.time_limit }}:00</div>
+{% endif %}
+<form method="post">
+    {{ form.hidden_tag() }}
+    {% for field in form %}
+        {% if field.name != 'submit' and field.type not in ['CSRFTokenField'] %}
+            <div class="question">
+                <label>{{ field.label }}</label>
+                {{ field() }}
+            </div>
+        {% endif %}
+    {% endfor %}
+    {{ form.submit(class="btn") }}
+</form>
+{% if test.time_limit %}
+<script>
+    const timerElement = document.getElementById('timer');
+    if (timerElement) {
+        let totalSeconds = parseInt(timerElement.dataset.minutes) * 60;
+        const display = () => {
+            const minutes = Math.floor(totalSeconds / 60).toString().padStart(2, '0');
+            const seconds = (totalSeconds % 60).toString().padStart(2, '0');
+            timerElement.textContent = `Time remaining: ${minutes}:${seconds}`;
+            if (totalSeconds <= 0) {
+                document.querySelector('form').submit();
+            }
+            totalSeconds--;
+        }
+        display();
+        setInterval(display, 1000);
+    }
+</script>
+{% endif %}
+{% endblock %}

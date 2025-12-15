@@ -1,0 +1,28 @@
+{% extends 'base.html' %}
+{% block content %}
+<h2>{{ attempt.test.title }} - {{ attempt.student.username }}</h2>
+<p>Score: {{ '%.1f'|format(attempt.score) }}%</p>
+<p>Submitted: {{ attempt.created_at.strftime('%Y-%m-%d %H:%M') }}</p>
+<ol>
+{% for answer in attempt.answers %}
+    <li>
+        <strong>{{ answer.question.text }}</strong><br>
+        {% if answer.selected_option_ids %}
+            {% set selected = answer.selected_option_ids.split(',') %}
+            <ul>
+            {% for option in answer.question.options %}
+                <li {% if option.is_correct %}class="correct"{% endif %}>
+                    {{ option.text }}
+                    {% if option.id|string in selected %} (chosen){% endif %}
+                </li>
+            {% endfor %}
+            </ul>
+        {% else %}
+            <p>Response: {{ answer.text_answer }}</p>
+            <p>Expected: {{ answer.question.options[0].text if answer.question.options else '' }}</p>
+        {% endif %}
+        <p>Status: {{ 'Correct' if answer.is_correct else 'Incorrect' }}</p>
+    </li>
+{% endfor %}
+</ol>
+{% endblock %}

@@ -1,0 +1,9 @@
+{% extends 'base.html' %}
+{% block content %}
+<section class="hero">
+    <h1>Welcome to the Flask Testing Platform</h1>
+    <p>Create and take assessments using server-rendered pages.</p>
+    {% if not current_user.is_authenticated %}
+        <a class="btn" href="{{ url_for('auth.register') }}">Get started</a>
+    {% endif %}
+</section>
